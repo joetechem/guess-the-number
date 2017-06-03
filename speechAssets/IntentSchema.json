@@ -1,19 +1,6 @@
-{
-  "intents": [
-    {
-      "intent": "MyColorIsIntent",
-      "slots": [
-        {
-          "name": "Color",
-          "type": "LIST_OF_COLORS"
-        }
-      ]
-    },
-    {
-      "intent": "WhatsMyColorIntent"
-    },
-    {
-      "intent": "AMAZON.HelpIntent"
-    }
-  ]
-}
+{ "intents": [
+    { "intent": "StartGameIntent" },
+    { "intent": "AMAZON.HelpIntent" },
+    { "intent": "AMAZON.StopIntent" },
+    { "intent": "AMAZON.CancelIntent" }
+]}
