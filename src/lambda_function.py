@@ -54,7 +54,7 @@ def get_welcome_response():
                     "Please guess a number between 1 and 100 to begin." \
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
-    reprompt_text = "Please guess a number between 1 and 100 to begin."
+    reprompt_text = "You can say, guess 50."
     return build_response(session_attributes={}, speechlet_response=build_speechlet_response(
         card_title, speech_output, reprompt_text))
 
@@ -75,7 +75,7 @@ def create_target_number_attributes():
 def start_game(intent, session):
     card_title = intent['name']
     speech_output = "Let's play! I'm thinking of a number between 1 and 100... "
-    reprompt_text = "You can say, take a guess."
+    reprompt_text = "You can say, guess 50."
     session_attributes = create_target_number_attributes()
     
     return build_response(session_attributes, build_speechlet_response(
@@ -98,11 +98,11 @@ def make_guess(intent, session):
         else:
             speech_output = "You got it! Goodbye."
             should_end_session = True
-        reprompt_text = "Please take another guess."
+        reprompt_text = "Please take another guess. You can say, guess 50."
     else:
         speech_output = "Oops, you haven't started a game! " \
                         "You can say, let's play."
-        reprompt_text = "Please start a game."
+        reprompt_text = "Please start a game. You can say, let's play."
     
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
