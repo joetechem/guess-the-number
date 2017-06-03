@@ -13,6 +13,13 @@
       "samples": []
     },
     {
+      "name": "MakeGuessIntent",
+      "samples": [
+        "make a guess"
+      ],
+      "slots": []
+    },
+    {
       "name": "StartGameIntent",
       "samples": [
         "start a game",
