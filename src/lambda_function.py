@@ -13,7 +13,7 @@ import random
 
 # --------------- Helpers that build all of the responses ----------------------
 
-def build_speechlet_response(title, output, reprompt_text, should_end_session):
+def build_speechlet_response(title, output, reprompt_text=None, should_end_session=False):
     return {
         'outputSpeech': {
             'type': 'PlainText',
@@ -49,27 +49,23 @@ def get_welcome_response():
     add those here
     """
 
-    session_attributes = {}
     card_title = "Welcome"
     speech_output = "Welcome to Guess the Number. " \
                     "Please guess a number between 1 and 100 to begin." \
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
     reprompt_text = "Please guess a number between 1 and 100 to begin."
-    should_end_session = False
-    return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, reprompt_text, should_end_session))
+    return build_response(session_attributes={}, build_speechlet_response(
+        card_title, speech_output, reprompt_text))
 
 
 def handle_session_end_request():
     card_title = "Session Ended"
     speech_output = "Thank you for playing. " \
-                    "Remember to like, favorite, comment, and subscribe." \
-                    "Have a nice day! "
-    # Setting this to true ends the session and exits the skill.
-    should_end_session = True
-    return build_response({}, build_speechlet_response(
-        card_title, speech_output, None, should_end_session))
+                    "Remember to like, favorite, comment, and subscribe. " \
+                    "Have a nice day!"
+    return build_response(session_attributes={}, build_speechlet_response(
+        card_title, speech_output, should_end_session=True))
 
 
 def create_target_number_attributes():
@@ -77,17 +73,30 @@ def create_target_number_attributes():
 
 
 def start_game(intent, session):
-    """ Starts the guessing game in the session and prepares the speech to reply to the
-    user.
-    """
-
-    session_attributes = create_target_number_attributes()
     card_title = intent['name']
-    speech_output = "This is the speech output."
-    reprompt_text = "This is the reprompt text."
-    should_end_session = False
+    speech_output = "Let's play! I'm thinking of a number between 1 and 100... "
+    reprompt_text = "You can say, take a guess."
+    session_attributes = create_target_number_attributes()
+    
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, reprompt_text, should_end_session))
+        card_title, speech_output, reprompt_text))
+
+
+def make_guess(intent, session):
+    card_title = intent['name']
+    session_attributes = session['attributes']
+
+    if session.get('attributes', {}) and "targetNumber" in session.get('attributes', {}):
+        target_number = session['attributes']['targetNumber']
+        speech_output = "The target number is {}.".format(target_number)
+        reprompt_text = "Please take another guess."
+    else:
+        speech_output = "Oops, you haven't started a game! " \
+                        "You can say, let's play."
+        reprompt_text = "Please start a game."
+    
+    return build_response(session_attributes, build_speechlet_response(
+        card_title, speech_output, reprompt_text))
 
 
 # --------------- Events ------------------
@@ -122,6 +131,8 @@ def on_intent(intent_request, session):
     # Dispatch to your skill's intent handlers
     if intent_name == "StartGameIntent":
         return start_game(intent, session)
+    elif intent_name == "MakeGuessIntent":
+        return make_guess(intent, session)
     elif intent_name == "AMAZON.HelpIntent":
         return get_welcome_response()
     elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":
