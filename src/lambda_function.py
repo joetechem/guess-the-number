@@ -84,11 +84,20 @@ def start_game(intent, session):
 
 def make_guess(intent, session):
     card_title = intent['name']
-    session_attributes = session['attributes']
+    session_attributes = {}
+    should_end_session = False
 
     if session.get('attributes', {}) and "targetNumber" in session.get('attributes', {}):
+        session_attributes = session['attributes']
         target_number = session['attributes']['targetNumber']
-        speech_output = "The target number is {}.".format(target_number)
+        guess      = int(intent['slots']['number']['value'])
+        if guess > target_number:
+            speech_output = "Lower."
+        elif guess < target_number:
+            speech_output = "Higher."
+        else:
+            speech_output = "You got it! Goodbye."
+            should_end_session = True
         reprompt_text = "Please take another guess."
     else:
         speech_output = "Oops, you haven't started a game! " \
@@ -96,7 +105,7 @@ def make_guess(intent, session):
         reprompt_text = "Please start a game."
     
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, reprompt_text))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 
 # --------------- Events ------------------
