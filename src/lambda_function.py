@@ -55,7 +55,7 @@ def get_welcome_response():
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
     reprompt_text = "Please guess a number between 1 and 100 to begin."
-    return build_response(session_attributes={}, build_speechlet_response(
+    return build_response(session_attributes={}, speechlet_response=build_speechlet_response(
         card_title, speech_output, reprompt_text))
 
 
@@ -64,7 +64,7 @@ def handle_session_end_request():
     speech_output = "Thank you for playing. " \
                     "Remember to like, favorite, comment, and subscribe. " \
                     "Have a nice day!"
-    return build_response(session_attributes={}, build_speechlet_response(
+    return build_response(session_attributes={}, speechlet_response=build_speechlet_response(
         card_title, speech_output, should_end_session=True))
 
 
