@@ -90,14 +90,18 @@ def make_guess(intent, session):
     if session.get('attributes', {}) and "targetNumber" in session.get('attributes', {}):
         session_attributes = session['attributes']
         target_number = session['attributes']['targetNumber']
-        guess      = int(intent['slots']['number']['value'])
-        if guess > target_number:
-            speech_output = "Lower."
-        elif guess < target_number:
-            speech_output = "Higher."
-        else:
-            speech_output = "You got it! Goodbye."
-            should_end_session = True
+        try:
+            guess = int(intent['slots']['number']['value'])
+            if guess > target_number:
+                speech_output = "Lower."
+            elif guess < target_number:
+                speech_output = "Higher."
+            else:
+                #return handle_session_end_request()
+                speech_output = "You got it! Thank you for playing, goodbye."
+                should_end_session = True
+        except ValueError:
+            speech_output = "Oops, please guess a number. For instance, guess 50."
         reprompt_text = "Please take another guess. You can say, guess 50."
     else:
         speech_output = "Oops, you haven't started a game! " \
