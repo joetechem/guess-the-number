@@ -21,8 +21,8 @@ def build_speechlet_response(title, output, reprompt_text=None, should_end_sessi
         },
         'card': {
             'type': 'Simple',
-            'title': "SessionSpeechlet - " + title,
-            'content': "SessionSpeechlet - " + output
+            'title': title,
+            'content': output
         },
         'reprompt': {
             'outputSpeech': {
@@ -73,7 +73,7 @@ def create_target_number_attributes():
 
 
 def start_game(intent, session):
-    card_title = intent['name']
+    card_title = "Start a Game"
     speech_output = "Let's play! I'm thinking of a number between 1 and 100... "
     reprompt_text = "You can say, guess 50."
     session_attributes = create_target_number_attributes()
@@ -83,7 +83,7 @@ def start_game(intent, session):
 
 
 def make_guess(intent, session):
-    card_title = intent['name']
+    card_title = "Make a Guess"
     session_attributes = {}
     should_end_session = False
 
